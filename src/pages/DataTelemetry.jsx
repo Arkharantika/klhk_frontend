@@ -1,9 +1,3 @@
-import StatBox from "../components/StatBox";
-import BatteryCharging50Icon from "@mui/icons-material/BatteryCharging50";
-import ThermostatIcon from "@mui/icons-material/Thermostat";
-import LandscapeIcon from "@mui/icons-material/Landscape";
-import ThunderstormIcon from "@mui/icons-material/Thunderstorm";
-
 import {
   Box,
   Button,
@@ -20,21 +14,12 @@ import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { tokens } from "../theme";
 import Header from "../components/Header";
 import LineChart2 from "../components/LineChart2";
-import ProgressCircle from "../components/ProgressCircle";
-import gambar from "./contohpos.jpg";
 
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 
 const DataTelemetry = () => {
-  const [battery, setBattery] = useState(0);
-  const [temp, setTemp] = useState(0);
-  const [tss, setTss] = useState(0);
-  const [rain, setRain] = useState(0);
-  const [water, setWater] = useState(0);
-  const [ktma, setKtma] = useState(0);
-
   const { id } = useParams();
   const [posname, setPosname] = useState("");
   const [nopos, setNopos] = useState("");
@@ -116,12 +101,7 @@ const DataTelemetry = () => {
 
   useEffect(() => {
     getSpecificData();
-    getLastData();
   }, []);
-  // useEffect(() => {
-  //   getSpecificData();
-  //   getLastData();
-  // });
 
   useEffect(() => {
     console.log("Selected Option changed:", selectedOption);
@@ -138,7 +118,6 @@ const DataTelemetry = () => {
     setLong(response.data.longitude);
     setLocation(response.data.location);
     setCondition(response.data.condition);
-    setKtma(response.data.k_tma);
     setNopos(response.data.no_pos);
     setFotonya("http://localhost:5000/images/" + response.data.foto_pos);
   };
@@ -166,16 +145,6 @@ const DataTelemetry = () => {
     console.log("transformedData", transformedData);
   };
 
-  const getLastData = async (req, res) => {
-    const response = await axios.get(`http://localhost:5000/latestdata/${id}`);
-    console.log("latest data : ", response);
-    setBattery(response.data.battery);
-    setTemp(response.data.device_temp);
-    setTss(response.data.tss);
-    setRain(response.data.rainfall);
-    setWater(response.data.waterlevel);
-  };
-
   const downloadExcel = async (req, res) => {
     if (startDate && endDate !== "kentang") {
       console.log("ada stardate maupun enddate");
@@ -183,20 +152,19 @@ const DataTelemetry = () => {
       try {
         const response = await axios.post(
           `http://localhost:5000/exportexcel/${id}`,
-          // `http://localhost:5000/trysheet/${id}`,
           {
             startDate: startDate,
             endDate: endDate,
           },
           {
-            responseType: "blob", // Important for handling file downloads
+            responseType: "blob",
           }
         );
 
         const url = window.URL.createObjectURL(new Blob([response.data]));
         const link = document.createElement("a");
         link.href = url;
-        link.setAttribute("download", "output.xlsx"); // or any other extension
+        link.setAttribute("download", "output.xlsx");
         document.body.appendChild(link);
         link.click();
         link.parentNode.removeChild(link);
@@ -385,7 +353,6 @@ const DataTelemetry = () => {
               </Box>
             </Box>
             <Box height="250px" m="-30px 0 00 30px">
-              {/* <LineChart2 isDashboard={true} extraData={transformedData} /> */}
               {selectedOption && stat.length > 0 && (
                 <LineChart2 isDashboard={true} extraData={transformedData} />
               )}

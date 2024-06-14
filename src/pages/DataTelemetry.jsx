@@ -19,6 +19,9 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 
+import { Dialog, DialogContent, IconButton } from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
+
 const DataTelemetry = () => {
   const { id } = useParams();
   const [posname, setPosname] = useState("");
@@ -28,8 +31,11 @@ const DataTelemetry = () => {
   const [location, setLocation] = useState("");
   const [condition, setCondition] = useState("");
   const [stat, setStat] = useState([]);
+  const [listcctv, setListcctv] = useState([]);
   const [startDate, setStartDate] = useState("kentang");
   const [endDate, setEndDate] = useState("kentang");
+  const [startCCTV, setStartCCTV] = useState("kentang");
+  const [endCCTV, setEndCCTV] = useState("kentang");
   const [fotonya, setFotonya] = useState("");
   const [selectedOption, setSelectedOption] = useState("battery"); // Set a default value
   const theme = useTheme();
@@ -46,6 +52,19 @@ const DataTelemetry = () => {
         },
       ]
     : [];
+
+  const [open, setOpen] = useState(false);
+  const [selectedImage, setSelectedImage] = useState(null);
+
+  const handleClickOpen = (image) => {
+    setSelectedImage(image);
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+    setSelectedImage(null);
+  };
 
   function formatedDate(date) {
     return new Date(date).toLocaleString();
@@ -112,7 +131,12 @@ const DataTelemetry = () => {
 
   const getSpecificData = async () => {
     const response = await axios.get(`http://localhost:5000/hardware/${id}`);
+    const photos = await axios.post(`http://localhost:5000/getfoto/${id}`, {
+      startDate: startCCTV,
+      endDate: endCCTV,
+    });
     console.log(response);
+    console.log("fotonya : ", photos);
     setPosname(response.data.pos_name);
     setLat(response.data.latitude);
     setLong(response.data.longitude);
@@ -120,6 +144,7 @@ const DataTelemetry = () => {
     setCondition(response.data.condition);
     setNopos(response.data.no_pos);
     setFotonya("http://localhost:5000/images/" + response.data.foto_pos);
+    setListcctv(photos.data);
   };
 
   const getAlldataList = async (e) => {
@@ -134,6 +159,20 @@ const DataTelemetry = () => {
       );
       setStat(response.data);
       console.log(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const getCCTVlist = async (e) => {
+    e.preventDefault();
+    try {
+      const photos = await axios.post(`http://localhost:5000/getfoto/${id}`, {
+        startDate: startCCTV,
+        endDate: endCCTV,
+      });
+      setListcctv(photos.data);
+      console.log(photos.data);
     } catch (error) {
       console.log(error);
     }
@@ -422,6 +461,125 @@ const DataTelemetry = () => {
           columns={columns}
           components={{ Toolbar: GridToolbar }}
         />
+        <br />
+
+        {/* UNTUK SHOW CCTV CAMERA */}
+        <Box
+          display="grid"
+          gridTemplateColumns="repeat(12, 1fr)"
+          gridAutoRows="140px"
+          gap="18px"
+        >
+          <Box
+            gridColumn="span 12"
+            gridRow=""
+            backgroundColor={colors.primary[400]}
+            display="flex"
+            justifyContent="flex-start"
+            alignItems="center"
+            paddingLeft="20px"
+            gap="20px"
+          >
+            <form className="d-flex" onSubmit={getCCTVlist}>
+              <div className="form-group mt-1">
+                <label>Tanggal Mulai</label>
+                <input
+                  type="datetime-local"
+                  step="1"
+                  className="form-control"
+                  value={startCCTV}
+                  onChange={(e) => setStartCCTV(e.target.value)}
+                  required
+                />
+              </div>
+              <div className="form-group mx-sm-3 mb-2 mt-1">
+                <label>Tanggal Akhir</label>
+                <input
+                  type="datetime-local"
+                  step="1"
+                  className="form-control"
+                  value={endCCTV}
+                  onChange={(e) => setEndCCTV(e.target.value)}
+                  required
+                />
+              </div>
+              <div className="form-group mx-sm-3 mb-2 mt-1">
+                <label></label>
+                <button
+                  type="submit"
+                  className="form-control bg-success text-light"
+                >
+                  Cari Snapshot CCTV
+                </button>
+              </div>
+            </form>
+          </Box>
+          {listcctv.map((listcctvnya, index) => (
+            <Box
+              key={index}
+              gridColumn="span 2"
+              gridRow="span 1"
+              backgroundColor={colors.primary[400]}
+              p="0px"
+              overflow="hidden"
+              sx={{
+                transition:
+                  "transform 0.3s ease-in-out, background-color 0.3s ease-in-out",
+                "&:hover": {
+                  transform: "scale(1.3)",
+                  backgroundColor: colors.primary[300],
+                },
+              }}
+              onClick={() => handleClickOpen(listcctvnya.img_name)}
+            >
+              <img
+                src={`http://43.252.105.150/ftp_capture/totalcamera/${listcctvnya.img_name}`}
+                alt={listcctvnya.img_name}
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  objectFit: "cover",
+                  cursor: "pointer",
+                }}
+              />
+            </Box>
+          ))}
+
+          <Dialog
+            open={open}
+            onClose={handleClose}
+            maxWidth="lg"
+            fullWidth
+            PaperProps={{
+              style: { backgroundColor: "transparent", boxShadow: "none" },
+            }}
+          >
+            <IconButton
+              aria-label="close"
+              onClick={handleClose}
+              sx={{
+                position: "absolute",
+                right: 8,
+                top: 8,
+                color: (theme) => theme.palette.grey[500],
+              }}
+            >
+              <CloseIcon />
+            </IconButton>
+            <DialogContent>
+              {selectedImage && (
+                <img
+                  src={`http://43.252.105.150/ftp_capture/totalcamera/${selectedImage}`}
+                  alt={selectedImage}
+                  style={{
+                    width: "100%",
+                    height: "auto",
+                  }}
+                />
+              )}
+            </DialogContent>
+          </Dialog>
+        </Box>
       </Box>
     </Box>
   );

@@ -70,6 +70,16 @@ const DataTelemetry = () => {
     return new Date(date).toLocaleString();
   }
 
+  // const dateNow = () => {
+  //   let localDateTime = new Date().toLocaleString();
+  //   localDateTime = localDateTime.replace(/\//g, "-");
+  //   localDateTime = localDateTime.replace(",", "");
+  //   console.log(
+  //     "Formatted date and time without slashes and comma:",
+  //     localDateTime
+  //   );
+  // };
+
   const columns = [
     {
       field: "tlocal",
@@ -120,6 +130,9 @@ const DataTelemetry = () => {
 
   useEffect(() => {
     getSpecificData();
+    // getAlldataList();
+    // dateNow();
+    Default50();
   }, []);
 
   useEffect(() => {
@@ -148,6 +161,7 @@ const DataTelemetry = () => {
   };
 
   const getAlldataList = async (e) => {
+    setStat([]);
     e.preventDefault();
     try {
       const response = await axios.post(
@@ -158,7 +172,22 @@ const DataTelemetry = () => {
         }
       );
       setStat(response.data);
-      console.log(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const Default50 = async () => {
+    try {
+      const response = await axios.post(
+        `http://localhost:5000/hardware/${id}`,
+        {
+          startDate: startDate,
+          endDate: endDate,
+        }
+      );
+      setStat(response.data);
+      console.log("astronot terbang woy!!", response.data);
     } catch (error) {
       console.log(error);
     }

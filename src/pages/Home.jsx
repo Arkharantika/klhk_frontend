@@ -1,11 +1,11 @@
 import {
   Box,
   Button,
-  Container,
+  // Container,
   Divider,
   Grid,
-  ListItemSecondaryAction,
-  Typography,
+  // ListItemSecondaryAction,
+  // Typography,
   useTheme,
 } from "@mui/material";
 import { tokens } from "../theme";
@@ -29,8 +29,6 @@ const Home = () => {
   useEffect(() => {
     getAllHardwares();
   }, []);
-
-  var iterator = 0;
 
   const history = useNavigate();
   const theme = useTheme();
@@ -110,7 +108,14 @@ const Home = () => {
           backgroundColor={colors.primary[400]}
           fontSize={20}
         >
-          ID : {hwinfo !== null ? <>{hwinfo.kd_hardware}</> : <> null </>}
+          {hwinfo !== null ? (
+            <>
+              ID : <b>{hwinfo.kd_hardware}</b>, Nama Pos :
+              <b>{hwinfo.pos_name}</b>, Lokasi : <b>{hwinfo.location}</b>
+            </>
+          ) : (
+            <> null </>
+          )}
         </Box>
 
         <Box

@@ -102,6 +102,7 @@ const LeafletMap = () => {
             <Popup>
               {tempData !== null ? (
                 <>
+                  ID : {tempData.kd_hardware} <br />
                   battery : {tempData.battery} <br />
                   rainfall : {tempData.rainfall} <br />
                   waterlevel : {tempData.waterlevel} <br />

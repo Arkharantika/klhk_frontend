@@ -22,6 +22,7 @@ const EditPos = () => {
   const [elevasi, setElevasi] = useState("");
   const [sed_conversion, setSed_conversion] = useState("");
   const [sed_cachment_area, setSed_cachment_area] = useState("");
+  const [displayfoto, setDisplayfoto] = useState("");
   // const [condition, setCondition] = useState("");
   const [k1, setK1] = useState("");
   const [k2, setK2] = useState("");
@@ -31,13 +32,22 @@ const EditPos = () => {
   const { id } = useParams();
   const history = useNavigate();
 
+  const [preview, setPreview] = useState("");
+
   useEffect(() => {
     getSpecificData();
   }, []);
 
+  const loadImage = (e) => {
+    const image = e.target.files[0];
+    setFile(image);
+    setPreview(URL.createObjectURL(image));
+  };
+
   const getSpecificData = async () => {
     const response = await axios.get(`http://localhost:5000/hardware/${id}`);
     console.log("response cuy :", response);
+    console.log("response fotopos :", response.data.foto_pos);
     setPos_name(response.data.pos_name);
     setLatitude(response.data.latitude);
     setlongitude(response.data.longitude);
@@ -57,6 +67,11 @@ const EditPos = () => {
     setK_tma(response.data.k_tma);
     setSed_cachment_area(response.data.sed_catchment_area);
     setSed_conversion(response.data.sed_conversion);
+    if (response.data.foto_pos) {
+      setDisplayfoto(response.data.foto_pos);
+    } else {
+      setDisplayfoto("null");
+    }
   };
 
   const updateHardware = async (e) => {
@@ -314,12 +329,66 @@ const EditPos = () => {
               variant="filled"
               type="file"
               label="Foto POS"
-              onChange={(e) => setFile(e.target.files[0])}
+              onChange={loadImage}
+              // onChange={(e) => setFile(e.target.files[0])}
               name="file"
               sx={{ gridColumn: "span 2" }}
-              required
+              // required
             />
           </Box>
+          <br />
+
+          {preview ? (
+            <figure className="mt-1">
+              <img
+                className="img-thumbnail"
+                src={preview}
+                alt="Preview Image"
+                style={{ maxWidth: "500px" }}
+              />
+            </figure>
+          ) : (
+            <>
+              <Box
+                display="grid"
+                gridTemplateColumns="repeat(12, 1fr)"
+                gridAutoRows="140px"
+                gap="18px"
+              >
+                {displayfoto === "null" ? (
+                  <>Belum ada Foto</>
+                ) : (
+                  <>
+                    <Box
+                      gridColumn="span 2"
+                      gridRow="span 1"
+                      p="0px"
+                      overflow="hidden"
+                      sx={{
+                        transition:
+                          "transform 0.3s ease-in-out, background-color 0.3s ease-in-out",
+                        "&:hover": {
+                          transform: "scale(1.3)",
+                        },
+                      }}
+                      onClick={() => {}}
+                    >
+                      <img
+                        src={`http://localhost:5000/images/${displayfoto}`}
+                        style={{
+                          width: "100%",
+                          height: "100%",
+                          objectFit: "cover",
+                          cursor: "pointer",
+                        }}
+                      />
+                    </Box>
+                  </>
+                )}
+              </Box>
+            </>
+          )}
+
           <Box display="flex" justifyContent="end" mt="20px">
             <Button type="submit" color="secondary" variant="contained">
               Simpan dan Update

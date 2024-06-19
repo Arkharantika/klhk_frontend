@@ -306,7 +306,7 @@ const Home = () => {
           <br />
           <Grid container spacing={1}>
             <Grid item xs={1} md={1.5}>
-              <div style={{ fontSize: "18px" }}>Rumus Sedimentasi </div>
+              <div style={{ fontSize: "18px" }}>Sedimentasi </div>
             </Grid>
             <Grid item xs={1} md={1.5}>
               <div style={{ fontSize: "18px" }}>
@@ -329,14 +329,8 @@ const Home = () => {
                 : <b>{hwinfo.sed_catchment_area}</b>
               </div>
             </Grid>
-            <Grid item xs={1} md={1.5}>
-              <div style={{ fontSize: "18px" }}>Longitude </div>
-            </Grid>
-            <Grid item xs={1} md={1.5}>
-              <div style={{ fontSize: "18px" }}>
-                : <b>{hwinfo.longitude}</b>
-              </div>
-            </Grid>
+            <Grid item xs={1} md={1.5}></Grid>
+            <Grid item xs={1} md={1.5}></Grid>
           </Grid>
           <Grid container spacing={1}>
             <Grid item xs={1} md={1.5}>
@@ -356,15 +350,27 @@ const Home = () => {
               </div>
             </Grid>
             <Grid item xs={1} md={1.5}>
-              <div style={{ fontSize: "18px" }}>Latitude </div>
+              <div style={{ fontSize: "18px" }}>Rating Curve</div>
             </Grid>
-            <Grid item xs={1} md={1.5}>
+            <Grid item xs={1} md={2}>
               <div style={{ fontSize: "18px" }}>
-                : <b>{hwinfo.latitude}</b>
+                {" "}
+                :{" "}
+                <b>
+                  a<sub>1</sub>
+                </b>
+                *(TMA)<sup>2</sup> +{" "}
+                <b>
+                  b<sub>2</sub>
+                </b>
+                *(TMA) +{" "}
+                <b>
+                  c<sub>3</sub>
+                </b>
               </div>
             </Grid>
             <Grid item xs={1} md={1.5}></Grid>
-            <Grid item xs={1} md={1.5}>
+            <Grid item xs={1} md={1}>
               <Button
                 sx={{
                   backgroundColor: colors.redAccent[700],
@@ -378,7 +384,7 @@ const Home = () => {
                   history(`/lihatdata/${hwinfo.kd_hardware}`);
                 }}
               >
-                Lihat detail pos
+                Detail
               </Button>
             </Grid>
           </Grid>

@@ -70,16 +70,6 @@ const DataTelemetry = () => {
     return new Date(date).toLocaleString();
   }
 
-  // const dateNow = () => {
-  //   let localDateTime = new Date().toLocaleString();
-  //   localDateTime = localDateTime.replace(/\//g, "-");
-  //   localDateTime = localDateTime.replace(",", "");
-  //   console.log(
-  //     "Formatted date and time without slashes and comma:",
-  //     localDateTime
-  //   );
-  // };
-
   const columns = [
     {
       field: "tlocal",
@@ -130,8 +120,6 @@ const DataTelemetry = () => {
 
   useEffect(() => {
     getSpecificData();
-    // getAlldataList();
-    // dateNow();
     Default50();
   }, []);
 

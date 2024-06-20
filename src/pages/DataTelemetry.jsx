@@ -378,16 +378,12 @@ const DataTelemetry = () => {
                   variant="h5"
                   fontWeight="600"
                   color={colors.grey[100]}
-                >
-                  Highlight Grafik
-                </Typography>
+                ></Typography>
                 <Typography
                   variant="h3"
                   fontWeight="bold"
                   color={colors.greenAccent[500]}
-                >
-                  ID Hardware : {id}
-                </Typography>
+                ></Typography>
               </Box>
               <Box>
                 <FormControl fullWidth>

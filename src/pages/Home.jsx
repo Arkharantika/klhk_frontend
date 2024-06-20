@@ -44,7 +44,8 @@ const Home = () => {
   };
 
   function formatedDate(date) {
-    return new Date(date).toLocaleTimeString();
+    return new Date(date).toLocaleString();
+    // return new Date(date).toLocaleTimeString();
   }
 
   const DataCollector = async (paramnya) => {

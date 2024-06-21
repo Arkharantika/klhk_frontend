@@ -21,6 +21,7 @@ import axios from "axios";
 
 import { Dialog, DialogContent, IconButton } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
+import Swal from "sweetalert2";
 
 const DataTelemetry = () => {
   const { id } = useParams();
@@ -230,6 +231,40 @@ const DataTelemetry = () => {
     } else {
       console.log("tidak ada stardate dan enddate");
       console.log("datanya : ", startDate, endDate);
+    }
+  };
+
+  const downloadHarian = async (req, res) => {
+    if (startDate === "kentang" || endDate === "kentang") {
+      Swal.fire({
+        icon: "warning",
+        title: "Data Kosong!",
+        text: "Harap input tanggal dengan benar !",
+      });
+    } else {
+      try {
+        const response = await axios.post(
+          `http://localhost:5000/exportharian/${id}`,
+          {
+            startDate: startDate,
+            endDate: endDate,
+          },
+          {
+            responseType: "blob",
+          }
+        );
+
+        const url = window.URL.createObjectURL(new Blob([response.data]));
+        const link = document.createElement("a");
+        link.href = url;
+        link.setAttribute("download", "output.xlsx");
+        document.body.appendChild(link);
+        link.click();
+        link.parentNode.removeChild(link);
+      } catch (error) {
+        console.log(error);
+      }
+      console.log("Sudah Bisa di isi");
     }
   };
 
@@ -452,6 +487,17 @@ const DataTelemetry = () => {
                 >
                   Lihat Data
                 </button>
+              </div>
+              <div className="form-group mx-sm-3 mb-2 mt-1">
+                <Button
+                  className="form-control bg-danger text-white"
+                  sx={{ marginTop: "20px" }}
+                  onClick={() => {
+                    downloadHarian();
+                  }}
+                >
+                  Download Data Harian
+                </Button>
               </div>
               <div className="form-group mx-sm-3 mb-2 mt-1">
                 <Button

@@ -11,3 +11,16 @@
 .leaflet-container {
   height: 100vh;
 }
+
+.custom-popup .leaflet-popup-content-wrapper {
+  /* background: #f2f2f2; Change background color */
+  background: linear-gradient(to bottom, #66dbff 0%, #ffffff 50%);
+  border-radius: 10px; /* Rounded corners */
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.2); /* Custom shadow */
+  padding: 10px; /* Padding inside the popup */
+  color: #333; /* Text color */
+}
+
+.custom-popup .leaflet-popup-tip {
+  background: #f2f2f2; /* Same background color for the popup tip */
+}

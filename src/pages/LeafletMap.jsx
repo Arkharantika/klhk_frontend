@@ -93,25 +93,82 @@ const LeafletMap = () => {
                 getLastData(marker.kd_hardware);
                 markerRefs.current[marker.id].openPopup();
               },
-              mouseout: () => {
-                // setMuncul(null);
-                markerRefs.current[marker.id].closePopup();
-              },
+              // mouseout: () => {
+              //   // setMuncul(null);
+              //   markerRefs.current[marker.id].closePopup();
+              // },
             }}
           >
-            <Popup>
+            <Popup className="custom-popup">
               {tempData !== null ? (
                 <>
-                  ID : {tempData.kd_hardware} <br />
-                  battery : {tempData.battery} <br />
-                  rainfall : {tempData.rainfall} <br />
-                  waterlevel : {tempData.waterlevel} <br />
-                  device temperature : {tempData.device_temp} <br />
-                  tss : {tempData.tss} <br />
-                  debit : {tempData.debit}
+                  <table class="table">
+                    <thead>
+                      <tr>
+                        <th scope="col"></th>
+                        <th scope="col"></th>
+                        <th scope="col"></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <th scope="row">1</th>
+                        <td>ID </td>
+                        <td>{tempData.kd_hardware}</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">2</th>
+                        <td>Battery</td>
+                        <td>{tempData.battery} </td>
+                      </tr>
+                      <tr>
+                        <th scope="row">3</th>
+                        <td>Rainfall</td>
+                        <td>{tempData.rainfall} </td>
+                      </tr>
+                      <tr>
+                        <th scope="row">4</th>
+                        <td>Waterlevel</td>
+                        <td>{tempData.waterlevel} </td>
+                      </tr>
+                      <tr>
+                        <th scope="row">5</th>
+                        <td>Device Temp.</td>
+                        <td>{tempData.device_temp} </td>
+                      </tr>
+                      <tr>
+                        <th scope="row">6</th>
+                        <td>TSS</td>
+                        <td>{tempData.tss} </td>
+                      </tr>
+                      <tr>
+                        <th scope="row">7</th>
+                        <td>Debit</td>
+                        <td>{tempData.debit} </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <div className="text-center">
+                    <button className="btn btn-sm btn-success">
+                      Lihat Pos
+                    </button>
+                  </div>
                 </>
               ) : (
-                <>tidak ada data</>
+                <>
+                  <table class="table">
+                    <thead>
+                      <tr>
+                        <th scope="col"></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <th scope="row">Tidak Ada Data !</th>
+                      </tr>
+                    </tbody>
+                  </table>
+                </>
               )}
             </Popup>
           </Marker>

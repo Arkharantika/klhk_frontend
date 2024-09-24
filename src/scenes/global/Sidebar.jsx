@@ -81,7 +81,7 @@ const Sidebar = () => {
 
   const refreshToken = async () => {
     try {
-      const response = await axios.get("http://localhost:5000/token");
+      const response = await axios.get("http://45.76.148.175:5000/token");
       const decoded = jwtDecode(response.data.newAccessToken);
       console.log(decoded);
       setName(decoded.name);
@@ -113,7 +113,7 @@ const Sidebar = () => {
         },
       }}
     >
-      <div style={{ height: "250vh" }}>
+      <div style={{ height: "110vh" }}>
         <ProSidebar collapsed={isCollapsed}>
           <Menu iconShape="square">
             {/* LOGO AND MENU ICON */}

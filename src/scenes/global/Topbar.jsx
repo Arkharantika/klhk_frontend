@@ -19,7 +19,7 @@ const Topbar = () => {
 
   const Logout = async () => {
     try {
-      const keluar = await axios.delete("http://localhost:5000/logout");
+      const keluar = await axios.delete("http://45.76.148.175:5000/logout");
       if (keluar) return history("/login");
     } catch (error) {
       console.log(error);

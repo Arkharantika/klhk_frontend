@@ -10,7 +10,15 @@ import {
   Typography,
   useTheme,
 } from "@mui/material";
-import { DataGrid, GridToolbar } from "@mui/x-data-grid";
+// import { DataGrid, GridToolbar } from "@mui/x-data-grid";
+import { DataGrid } from "@mui/x-data-grid";
+import {
+  GridToolbarContainer,
+  GridToolbarColumnsButton,
+  GridToolbarFilterButton,
+  GridToolbarQuickFilter,
+  GridToolbarDensitySelector,
+} from "@mui/x-data-grid";
 import { tokens } from "../theme";
 import Header from "../components/Header";
 import LineChart2 from "../components/LineChart2";
@@ -39,6 +47,7 @@ const DataTelemetry = () => {
   const [endCCTV, setEndCCTV] = useState("kentang");
   const [fotonya, setFotonya] = useState("");
   const [selectedOption, setSelectedOption] = useState("battery"); // Set a default value
+  const [selectDownload, setSelectDownload] = useState("debit");
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const transformedData = selectedOption
@@ -132,8 +141,10 @@ const DataTelemetry = () => {
   }, [selectedOption, stat]);
 
   const getSpecificData = async () => {
-    const response = await axios.get(`http://localhost:5000/hardware/${id}`);
-    const photos = await axios.post(`http://localhost:5000/getfoto/${id}`, {
+    const response = await axios.get(
+      `http://45.76.148.175:5000/hardware/${id}`
+    );
+    const photos = await axios.post(`http://45.76.148.175:5000/getfoto/${id}`, {
       startDate: startCCTV,
       endDate: endCCTV,
     });
@@ -145,7 +156,7 @@ const DataTelemetry = () => {
     setLocation(response.data.location);
     setCondition(response.data.condition);
     setNopos(response.data.no_pos);
-    setFotonya("http://localhost:5000/images/" + response.data.foto_pos);
+    setFotonya("http://45.76.148.175:5000/images/" + response.data.foto_pos);
     setListcctv(photos.data);
   };
 
@@ -154,7 +165,7 @@ const DataTelemetry = () => {
     e.preventDefault();
     try {
       const response = await axios.post(
-        `http://localhost:5000/hardware/${id}`,
+        `http://45.76.148.175:5000/hardware/${id}`,
         {
           startDate: startDate,
           endDate: endDate,
@@ -169,7 +180,7 @@ const DataTelemetry = () => {
   const Default50 = async () => {
     try {
       const response = await axios.post(
-        `http://localhost:5000/hardware/${id}`,
+        `http://45.76.148.175:5000/hardware/${id}`,
         {
           startDate: startDate,
           endDate: endDate,
@@ -185,10 +196,13 @@ const DataTelemetry = () => {
   const getCCTVlist = async (e) => {
     e.preventDefault();
     try {
-      const photos = await axios.post(`http://localhost:5000/getfoto/${id}`, {
-        startDate: startCCTV,
-        endDate: endCCTV,
-      });
+      const photos = await axios.post(
+        `http://45.76.148.175:5000/getfoto/${id}`,
+        {
+          startDate: startCCTV,
+          endDate: endCCTV,
+        }
+      );
       setListcctv(photos.data);
       console.log(photos.data);
     } catch (error) {
@@ -208,7 +222,7 @@ const DataTelemetry = () => {
       console.log("datanya : ", startDate, endDate);
       try {
         const response = await axios.post(
-          `http://localhost:5000/exportexcel/${id}`,
+          `http://45.76.148.175:5000/exportexcel/${id}`,
           {
             startDate: startDate,
             endDate: endDate,
@@ -244,28 +258,44 @@ const DataTelemetry = () => {
     } else {
       try {
         const response = await axios.post(
-          `http://localhost:5000/exportharian/${id}`,
+          `http://45.76.148.175:5000/exportharian/${id}`,
           {
             startDate: startDate,
             endDate: endDate,
+            requestnya: selectDownload,
           },
           {
             responseType: "blob",
           }
         );
+        console.log("Headers: ", response.headers);
+        // Extract filename from custom header
+        const filename = response.headers["x-filename"] || "output.xlsx";
 
         const url = window.URL.createObjectURL(new Blob([response.data]));
         const link = document.createElement("a");
         link.href = url;
-        link.setAttribute("download", "output.xlsx");
+        link.setAttribute("download", filename); // Use dynamic filename
         document.body.appendChild(link);
         link.click();
-        link.parentNode.removeChild(link);
+        link.remove(); // Clean up the DOM
       } catch (error) {
-        console.log(error);
+        console.log("Error downloading file:", error);
       }
-      console.log("Sudah Bisa di isi");
+      // console.log("Sudah Bisa di isi");
     }
+  };
+
+  const CustomToolbar = () => {
+    return (
+      <GridToolbarContainer>
+        <GridToolbarColumnsButton />
+        <GridToolbarFilterButton />
+        {/* <GridToolbarQuickFilter /> */}
+        <GridToolbarDensitySelector />
+        {/* You can add other custom buttons or components here */}
+      </GridToolbarContainer>
+    );
   };
 
   return (
@@ -488,6 +518,21 @@ const DataTelemetry = () => {
                   Lihat Data
                 </button>
               </div>
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                value={selectDownload}
+                label="Sensor"
+                onChange={(e) => setSelectDownload(e.target.value)}
+              >
+                <MenuItem value="waterlevel">waterlevel</MenuItem>
+                <MenuItem value="rainfall">rainfall</MenuItem>
+                <MenuItem value="tss">tss</MenuItem>
+                <MenuItem value="debit">debit</MenuItem>
+                <MenuItem value="battery">battery</MenuItem>
+                <MenuItem value="device_temp">device temperature</MenuItem>
+                <MenuItem value="sedimentasi">sedimentasi</MenuItem>
+              </Select>
               <div className="form-group mx-sm-3 mb-2 mt-1">
                 <Button
                   className="form-control bg-danger text-white"
@@ -518,7 +563,10 @@ const DataTelemetry = () => {
           checkboxSelection
           rows={stat}
           columns={columns}
-          components={{ Toolbar: GridToolbar }}
+          // components={{ Toolbar: GridToolbar }}
+          components={{
+            Toolbar: CustomToolbar, // Use the custom toolbar here
+          }}
         />
         <br />
 
@@ -592,7 +640,7 @@ const DataTelemetry = () => {
               onClick={() => handleClickOpen(listcctvnya.img_name)}
             >
               <img
-                src={`http://43.252.105.150/ftp_capture/totalcamera/${listcctvnya.img_name}`}
+                src={`http://45.76.148.175/ftp_capture/totalcamera/${listcctvnya.img_name}`}
                 alt={listcctvnya.img_name}
                 style={{
                   width: "100%",
@@ -628,7 +676,7 @@ const DataTelemetry = () => {
             <DialogContent>
               {selectedImage && (
                 <img
-                  src={`http://43.252.105.150/ftp_capture/totalcamera/${selectedImage}`}
+                  src={`http://45.76.148.175/ftp_capture/totalcamera/${selectedImage}`}
                   alt={selectedImage}
                   style={{
                     width: "100%",

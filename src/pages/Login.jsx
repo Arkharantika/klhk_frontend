@@ -43,7 +43,7 @@ const Login = () => {
   const Auth = async (e) => {
     e.preventDefault();
     try {
-      const masuk = await axios.post("http://localhost:5000/login", {
+      const masuk = await axios.post("http://45.76.148.175:5000/login", {
         email: email,
         password: password,
       });

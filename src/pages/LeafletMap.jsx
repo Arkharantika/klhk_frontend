@@ -30,7 +30,7 @@ const LeafletMap = () => {
   });
 
   const getHardwares = async () => {
-    const response = await axios.get("http://localhost:5000/hardwares");
+    const response = await axios.get("http://45.76.148.175:5000/hardwares");
     console.log(response.data);
     setListhardware(response.data);
   };
@@ -38,7 +38,7 @@ const LeafletMap = () => {
   const getLastData = async (param) => {
     console.log("kd_hardwarenya : ", param);
     const response = await axios.get(
-      `http://localhost:5000/latestdata/${param}`
+      `http://45.76.148.175:5000/latestdata/${param}`
     );
     console.log("latest data : ", response);
     setTempData(response.data);

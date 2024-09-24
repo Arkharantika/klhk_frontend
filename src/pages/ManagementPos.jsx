@@ -27,7 +27,7 @@ const ManagementPos = () => {
 
   const refreshToken = async () => {
     try {
-      const response = await axios.get("http://localhost:5000/token");
+      const response = await axios.get("http://45.76.148.175:5000/token");
       // setToken(response.data.newAccessToken);
       const decoded = jwtDecode(response.data.newAccessToken);
       console.log(decoded);
@@ -120,7 +120,7 @@ const ManagementPos = () => {
   ];
 
   const getHardwares = async () => {
-    const response = await axios.get("http://localhost:5000/hardwares");
+    const response = await axios.get("http://45.76.148.175:5000/hardwares");
     console.log(response.data);
     setHardwares(response.data);
   };

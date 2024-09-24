@@ -141,7 +141,9 @@ export const themeSettings = (mode) => {
               light: colors.grey[100],
             },
             background: {
-              default: colors.primary[500],
+              // default: colors.primary[300],
+              // default: colors.redAccent[600],
+              default: "#1858cd",
             },
           }
         : {
@@ -158,7 +160,8 @@ export const themeSettings = (mode) => {
               light: colors.grey[100],
             },
             background: {
-              default: "#fcfcfc",
+              // default: "#fcfcfc",
+              default: "#CD5C5C",
             },
           }),
     },
@@ -200,6 +203,7 @@ export const ColorModeContext = createContext({
 
 export const useMode = () => {
   const [mode, setMode] = useState("dark");
+  // const [mode, setMode] = useState("light");
 
   const colorMode = useMemo(
     () => ({

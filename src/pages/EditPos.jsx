@@ -45,7 +45,7 @@ const EditPos = () => {
   };
 
   const getSpecificData = async () => {
-    const response = await axios.get(`http://localhost:5000/hardware/${id}`);
+    const response = await axios.get(`http://45.76.148.175:5000/hardware/${id}`);
     console.log("response cuy :", response);
     console.log("response fotopos :", response.data.foto_pos);
     setPos_name(response.data.pos_name);
@@ -96,7 +96,7 @@ const EditPos = () => {
     formData.append("sed_catchment_area", sed_cachment_area);
     formData.append("sed_conversion", sed_conversion);
     try {
-      await axios.post(`http://localhost:5000/updatehardware/${id}`, formData, {
+      await axios.post(`http://45.76.148.175:5000/updatehardware/${id}`, formData, {
         headers: {
           "Content-type": "multipart/form-data",
           // Authorization: `Bearer ${token}`,
@@ -374,7 +374,7 @@ const EditPos = () => {
                       onClick={() => {}}
                     >
                       <img
-                        src={`http://localhost:5000/images/${displayfoto}`}
+                        src={`http://45.76.148.175:5000/images/${displayfoto}`}
                         style={{
                           width: "100%",
                           height: "100%",
